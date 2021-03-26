@@ -5,34 +5,54 @@
  * @param {!express:Response} res HTTP response context.
  */
 exports.compute = (req, res) => {
-  // Find the index of a number in an array of Fibonacci numbers.
-// Return error if number is not a Fibonacci number.
 
-function fibonacci(num) {
+  let num = req.body.compute;
+  let result;
 
-    var i,
-        fib = []; // iterator, array
+  function fibonacciArray(num) {
+    let index = 0, fibNum;
+    let fibNumbers = [];
 
-    // first two places in the array are always set
-    fib[0] = 0;
-    fib[1] = 1;
+    do {
+      fibNum = fibonacci(index);
+      fibNumbers.push(fibNum);
+      index++;
+    } while (fibNum <= num) 
 
-    num = parseInt(num, 10); // Make sure the number is an integer.
+    return fibNumbers.slice(0, fibNumbers.length - 1);;
+  }
 
-    if (isNaN(num)) {
-        throw new Error("Must be an integer."); // Throw an error if it's not
+  function fibonacci(num, memo) {
+    memo = memo || {};
+
+    if (memo[num]) return memo[num];
+    if (num <= 1) return 1;
+
+    return memo[num] = fibonacci(num - 1, memo) + fibonacci(num - 2, memo);
+  }
+
+  function isOdd(num) { 
+    return num % 2;
+  }
+
+  function sumOdd(numArray) {
+    let sum = 0;
+    for (var i = 0; i < numArray.length; i++) {		
+      if ( isOdd( numArray[i] ) ) {
+        sum += numArray[i];
+      }				
     }
+    return sum;
+  }
 
-    // loop through from the third element to the number
-    // passed to the function
-    for (i = 2; i <= num; i+=1) {
-        fib[i] = fib[i-2] + fib[i-1]; // generate the rest of the fibonacci array
-        if (fib.indexOf(num) !== -1) { // if we find the number
-            return fib.indexOf(num); //return it
-        } else if (fib[i] > num) { // Suck. Number isn't a Fibonacci.
-            throw new Error("Not a fibonacci number"); // Throw an error.
-        }
-    }
+    
+  if (Number.isInteger(num)) {
+    let fibNumbers = fibonacciArray(num);
+    result = sumOdd(fibNumbers);
 
-}
+  } else {
+    result = 'not an integer';
+  }
+
+  res.status(200).send({ "result": result });
 };
