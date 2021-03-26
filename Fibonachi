@@ -1,0 +1,38 @@
+/**
+ * Responds to any HTTP request.
+ *
+ * @param {!express:Request} req HTTP request context.
+ * @param {!express:Response} res HTTP response context.
+ */
+exports.compute = (req, res) => {
+  // Find the index of a number in an array of Fibonacci numbers.
+// Return error if number is not a Fibonacci number.
+
+function fibonacci(num) {
+
+    var i,
+        fib = []; // iterator, array
+
+    // first two places in the array are always set
+    fib[0] = 0;
+    fib[1] = 1;
+
+    num = parseInt(num, 10); // Make sure the number is an integer.
+
+    if (isNaN(num)) {
+        throw new Error("Must be an integer."); // Throw an error if it's not
+    }
+
+    // loop through from the third element to the number
+    // passed to the function
+    for (i = 2; i <= num; i+=1) {
+        fib[i] = fib[i-2] + fib[i-1]; // generate the rest of the fibonacci array
+        if (fib.indexOf(num) !== -1) { // if we find the number
+            return fib.indexOf(num); //return it
+        } else if (fib[i] > num) { // Suck. Number isn't a Fibonacci.
+            throw new Error("Not a fibonacci number"); // Throw an error.
+        }
+    }
+
+}
+};
